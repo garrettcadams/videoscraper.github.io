@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
+<head>
+    <title>VideoScraper</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VideoScraper">
+    <meta name="author" content="VideoScraper">    
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">   
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.css">    
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+</head> 
+
+<body>
+    <!-- ******HEADER****** --> 
+    <header class="header">
+        <div class="container">                       
+            <img class="profile-image img-responsive pull-left" src="assets/images/profile.png" alt="VideoScraper" />
+            <div class="profile-content pull-left">
+                <h1 class="name">VideoScraper</h1>
+                <h2 class="desc">A video stream link scraper for Android</h2>   
+            </div><!--//profile-->
+            <a class="btn btn-cta-primary pull-right" href="releases/VideoScraper-latest-release.apk" target="_blank"><i class="fa fa-download"></i>Download APK</a>              
+        </div><!--//container-->
+    </header><!--//header-->
+    
+    <div class="container sections-wrapper">
+        <div class="row">
+            <div class="primary col-md-8 col-sm-12 col-xs-12">
+                <section class="latest section">
+                    <div class="section-inner">
+                        <h2 class="heading">What is VideoScraper?</h2>
+                        <div class="content">
+                            <p>VideoScraper is an Android service that scrapes movies and tvshows stream links from several websites.</p>
+                            <p>It is a third-party service that is very easy to implement by developers and altough it can be integrated with any app, movie streaming Kodi plugins like Exodus, SALTS or Zen are the main targets for this.</p>                         
+                        </div><!--//content-->
+                    </div><!--//section-inner-->                 
+                </section><!--//section-->
+    
+               <section class="latest section">
+                    <div class="section-inner">
+                        <h2 class="heading">How does it work?</h2>
+                        <div class="content">    
+                            <div class="desc text-left">                                    
+                                <p>The APK is an Android service which contains an embedded HTTP server listening on port 16735. <br/>
+                                    Once started, the Android service will run in the background and start automatically on device reboots.</p>
+                                <p>The HTTP server implements a simple REST API which is called by other apps, Kodi plugins, etc...<br/>
+                                    In order to use this service, you need to enable the VideoScraper provider on your Kodi plugin.</p>
+                                <p>The plugin makes a request to the embedded HTTP server and receives a response with the scraped links ready for you.</p>
+                                <div class="alert alert-success" role="alert">
+                                    <strong>Remember:</strong> The HTTP server can only process one request at a time and should not be available as a public API on the Internet.
+                                </div>                                
+                                <p>If your Kodi plugin is not yet supported, please contact your plugin developers and tell them about this project.</p>
+                                <h4>Technically speaking...</h4>
+                                <p>The scraping methods used by VideoScraper consist in using invisible and controllable webviews which render HTML and inject custom javascript to automate tasks.</p>
+                                <p>Altough this method is a bit slower and more memory intensive than traditional scraping (which does not execute javascript or render HTML), it has been refined and is quite efective because it restricts unnecessary resources, like images,css, and most js files.</p>
+                                <p>Using this process will make sure that scrapers will not stop working once the website developers change something on their packed/obfuscated javascript code used for generating tokens.<br />
+                                    The scraper does not care about any of this stuff and does not need to emulate algorithms. It just navigates through their website like any other regular visitor.</p>
+                            </div><!--//desc-->         
+                        </div><!--//content-->  
+                    </div><!--//section-inner-->                 
+                </section><!--//section-->
+                
+                <section class="latest section">
+                    <div class="section-inner">
+                        <h2 class="heading">For developers</h2>
+                        <div class="content">    
+                            <div class="desc text-left">                                    
+                                <p>Integrating a Kodi plugin with VideoScraper is quite easy as there is only one simple HTTP GET request to the <i class="text-success">sources</i> endpoint which returns a JSON array of objects.</p>
+                                <h4>Making a Request</h4>
+                                When calling the <i class="text-success">sources</i> endpoint, the following GET parameters are <b class="text-warning">required</b> for movies and tvshows:<br />
+                                    <ul> 
+                                        <li><i class="text-success">title</i> - The movie or tvshow title.</li>
+                                        <li><i class="text-success">year</i> - The year of the release.</li>
+                                        <li><i class="text-success">imdb</i> - The IMDB ID.</li>
+                                    </ul>
+                                If scraping for tvshows, you also need to include :<br />
+                                <ul> 
+                                    <li><i class="text-success">season</i> - The season number.</li>
+                                    <li><i class="text-success">episode</i> - The episode number.</li>
+                                </ul>
+                                <h4>Handling the Response</h4>
+                                The method returns a JSON array of objects with the following structure:<br />
+                                <ul> 
+                                    <li><i class="text-success">provider</i> - The website where this link was scraped from.</li>
+                                    <li><i class="text-success">quality</i> - The quality of the video. Can be <b>1080p</b>, <b>HD</b>, <b>SD</b> or <b>UNKNOWN</b></li>
+                                    <li><i class="text-success">source</i> - The host of the file. Can be <b>GVIDEO</b> or <b>CDN</b></li>
+                                    <li><i class="text-success">title</i> - The movie or tvshow title that was searched for.</li>
+                                    <li><i class="text-success">url</i> - The stream url.</li>
+                                </ul>                                
+                                <hr />
+                                <h4>Example request for Game Of Thrones S02E01:</h4>
+                                <p>Calling this URL: <pre>http://127.0.0.1:16735/sources?title=Game of Thrones&year=2011&imdb=tt0944947&season=2&episode=1</pre>
+                                would return a JSON result similar to this (links are not real, of course):
+                                <pre>[
+  {
+    "provider": "SEZONLUKDIZI",
+    "quality": "1080p",
+    "source": "GVIDEO",
+    "title": "Game of Thrones",
+    "url": "https://redirector.video.stream.link"
+  },
+  {
+    "provider": "WATCH5S",
+    "quality": "SD",
+    "source": "GVIDEO",
+    "title": "Game of Thrones",
+    "url": "https://redirector.video.stream.link"
+  },
+  {
+    "provider": "YESMOVIES",
+    "quality": "HD",
+    "source": "GVIDEO",
+    "title": "Game of Thrones",
+    "url": "https://redirector.video.stream.link"
+  },
+  ]</pre>
+                                <hr />
+                                <h4>Example request for Rogue One:</h4>
+                                <p>Calling this URL: <pre>http://127.0.0.1:16735/sources?title=Rogue One&year=2016&imdb=tt3748528</pre>
+                                would return a JSON result similar to this (links are not real, of course):
+                                <pre>[
+  {
+    "provider": "WATCH5S",
+    "quality": "HD",
+    "source": "GVIDEO",
+    "title": "Rogue One: A Star Wars Story",
+    "url": "https://redirector.video.stream.link"
+  },
+  {
+    "provider": "GOMOVIES",
+    "quality": "HD",
+    "source": "GVIDEO",
+    "title": "Rogue One: A Star Wars Story",
+    "url": "https://redirector.video.stream.link"
+  },
+  {
+    "provider": "FMOVIES",
+    "quality": "1080p",
+    "source": "GVIDEO",
+    "title": "Rogue One: A Star Wars Story",
+    "url": "https://redirector.video.stream.link"
+  }
+]</pre>                                
+                            </div><!--//desc-->         
+                        </div><!--//content-->  
+                    </div><!--//section-inner-->                 
+                </section><!--//section-->
+                
+            </div><!--//primary-->
+            <div class="secondary col-md-4 col-sm-12 col-xs-12">                
+                <aside class="credits aside section">
+                    <div class="section-inner">
+                        <h2 class="heading">Latest release</h2>
+                        <div class="content">
+                            <p>Version <b>1.0</b></p>
+                            <p>Released on <b>30/05/2017</b></p>
+                             <a class="btn btn-cta-primary btn-download" href="releases/VideoScraper-latest-release.apk" target="_blank"><i class="fa fa-download"></i>Download</a>
+                        </div><!--//content-->
+                    </div><!--//section-inner-->
+                </aside><!--//section-->              
+            </div><!--//secondary-->    
+        </div><!--//row-->
+    </div><!--//masonry-->
+    
+    <!-- ******FOOTER****** --> 
+    <footer class="footer">
+        <div class="container text-center">
+                <small class="copyright">Website hosted on GitHub Pages</small>
+        </div><!--//container-->
+    </footer><!--//footer-->
+ 
+    <!-- Javascript -->          
+    <script type="text/javascript" src="assets/plugins/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>    
+    <script type="text/javascript" src="assets/plugins/jquery-rss/dist/jquery.rss.min.js"></script> 
+    <!-- custom js -->
+    <script type="text/javascript" src="assets/js/main.js"></script>            
+</body>
+</html> 
+
